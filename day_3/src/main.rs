@@ -52,20 +52,18 @@ fn get_group_match(groups: Vec<Group>) -> Vec<char> {
     let mut matched_list: Vec<char> = Vec::new();
 
     for group in groups {
-        let first: Vec<char> = group.items[0].clone();
-        let second: Vec<char> = group.items[1].clone();
-        let third: Vec<char> = group.items[2].clone();
+        let first = &group.items[0];
+        let second = &group.items[1];
+        let third = &group.items[2];
 
-        let mut possible_match: Vec<char> = Vec::new();
+        let possible_match = first
+            .iter()
+            .map(|i| second.iter().filter(move |j| i == *j))
+            .flatten()
+            .copied()
+            .collect::<Vec<char>>();
+
         let mut matched_char: char = ' ';
-
-        for items in first.clone() {
-            for item in second.clone() {
-                if item == items {
-                    possible_match.push(item);
-                }
-            }
-        }
 
         for items in possible_match {
             for item in third.clone() {
@@ -138,6 +136,7 @@ fn get_matching_items(lines: Lines<BufReader<File>>) -> Vec<char> {
                 }
             }
         }
+
         collection.push(result);
     }
 

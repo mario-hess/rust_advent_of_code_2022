@@ -11,31 +11,14 @@ fn main() {
     let indexes = get_indexes(&extracted_containership);
     extracted_containership.remove(0);
 
-    let mut parsed_containership = parse_containership(indexes, extracted_containership);
+    // Part one
+    let parsed_containership = parse_containership(indexes, extracted_containership);
     let parsed_digits = parse_digits(reader);
+    let containers_on_top = cratemover_9000(&parsed_containership, parsed_digits);
+    println!("Result from CrateMover 9000: {:?}", containers_on_top);
 
-    for digits in parsed_digits {
-        let move_count = digits[0];
-        let from = digits[1] - 1;
-        let to = digits[2] - 1;
-
-        for _ in 0..move_count {
-            let mut from_clone = parsed_containership[from].clone().to_owned();
-            from_clone.reverse();
-            parsed_containership[to].push(from_clone[0]);
-            parsed_containership[from].pop();
-        }
-    }
-
-    let mut containers_on_top: Vec<char> = Vec::new();
-
-    for container_row in &parsed_containership {
-        let mut row = container_row.clone();
-        row.reverse();
-        containers_on_top.push(row[0]);
-    }
-
-    println!("{:?}", containers_on_top);
+    // Part two
+    println!("{:?}", parsed_containership);
 }
 
 fn extract_containership(reader: &mut BufReader<File>) -> Vec<String> {
@@ -138,4 +121,30 @@ fn parse_digits(reader: BufReader<File>) -> Vec<Vec<usize>> {
     }
 
     parsed_digits
+}
+
+fn cratemover_9000(parsed_containership: &Vec<Vec<char>>, parsed_digits: Vec<Vec<usize>>) -> Vec<char> {
+    let mut parsed_containership = parsed_containership.clone();
+    for digits in parsed_digits {
+        let move_count = digits[0];
+        let from = digits[1] - 1;
+        let to = digits[2] - 1;
+
+        for _ in 0..move_count {
+            let mut from_clone = parsed_containership[from].clone();
+            from_clone.reverse();
+            parsed_containership[to].push(from_clone[0]);
+            parsed_containership[from].pop();
+        }
+    }
+
+    let mut containers_on_top: Vec<char> = Vec::new();
+
+    for container_row in parsed_containership {
+        let mut row = container_row.clone();
+        row.reverse();
+        containers_on_top.push(row[0]);
+    }
+
+    containers_on_top
 }
