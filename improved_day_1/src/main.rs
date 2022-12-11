@@ -6,12 +6,12 @@ fn main() -> color_eyre::Result<()> {
         .map(|v| v.parse::<u64>().ok())
         .collect::<Vec<_>>();
 
-    let groups = lines
+    let max = lines
         .split(|line| line.is_none())
         .map(|group| group.iter().map(|v| v.unwrap()).sum::<u64>())
         .max();
 
-    println!("groups = {groups:?}");
+    println!("Max = {max:?}");
 
     Ok(())
 }
