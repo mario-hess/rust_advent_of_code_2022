@@ -1,6 +1,4 @@
-fn main() -> color_eyre::Result<()> {
-    color_eyre::install()?;
-
+fn main() {
     let lines = include_str!("input.txt")
         .lines()
         .map(|v| v.parse::<u64>().ok())
@@ -12,6 +10,4 @@ fn main() -> color_eyre::Result<()> {
         .max();
 
     println!("Max = {max:?}");
-
-    Ok(())
 }
