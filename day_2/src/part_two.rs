@@ -17,7 +17,7 @@ pub fn main() {
 
     let choices: Vec<Choice> = collection
         .iter()
-        .map(|s| {
+        .filter_map(|s| {
             let mut s = s.split(' ');
 
             let opponent = s.next()?;
@@ -38,7 +38,6 @@ pub fn main() {
 
             Some(Choice { opponent, me })
         })
-        .flatten()
         .collect();
 
     let mut total_score = 0;

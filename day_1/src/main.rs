@@ -13,16 +13,14 @@ fn main() {
     let mut elfs: Vec<Elf> = Vec::new();
     let mut sum: i32 = 0;
 
-    for line in lines {
-        if let Ok(x) = line {
-            match x.parse::<i32>() {
-                Ok(n) => sum += n,
-                Err(_) => {
-                    elfs.push(Elf { calories: sum });
-                    sum = 0;
-                }
-            };
-        }
+    for line in lines.flatten() {
+        match line.parse::<i32>() {
+            Ok(n) => sum += n,
+            Err(_) => {
+                elfs.push(Elf { calories: sum });
+                sum = 0;
+            }
+        };
     }
 
     let mut fattest_elf = &Elf { calories: 0 };
@@ -34,10 +32,10 @@ fn main() {
     }
     println!("Fattest elf: {:?}", fattest_elf);
 
-    let second_fattest_elf = next_fattest_elf(&elfs, &fattest_elf);
+    let second_fattest_elf = next_fattest_elf(&elfs, fattest_elf);
     println!("Second fattest elf: {:?}", second_fattest_elf);
 
-    let third_fattest_elf = next_fattest_elf(&elfs, &second_fattest_elf);
+    let third_fattest_elf = next_fattest_elf(&elfs, second_fattest_elf);
     println!("Third fattest elf: {:?}", third_fattest_elf);
 
     let sum = fattest_elf.calories + second_fattest_elf.calories + third_fattest_elf.calories;

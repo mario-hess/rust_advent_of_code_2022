@@ -20,12 +20,5 @@ pub fn get_collection(path: &str) -> Vec<String> {
     let file = File::open(path).expect("Unable to open file.");
     let lines = BufReader::new(file).lines();
 
-    let mut collection: Vec<String> = Vec::new();
-
-    for line in lines {
-        if let Ok(x) = line {
-            collection.push(x);
-        }
-    }
-    collection
+    lines.into_iter().flatten().collect()
 }

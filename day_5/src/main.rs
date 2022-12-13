@@ -44,15 +44,12 @@ fn extract_containership(reader: &mut BufReader<File>) -> Vec<String> {
     containership
 }
 
-fn get_indexes(extracted_containership: &Vec<String>) -> Vec<usize> {
+fn get_indexes(extracted_containership: &[String]) -> Vec<usize> {
     let mut indexes: Vec<usize> = Vec::new();
-    let mut index = 0;
-    for char in extracted_containership[0].chars() {
+    for (index, char) in extracted_containership[0].chars().enumerate() {
         if !char.is_whitespace() {
             indexes.push(index);
         }
-
-        index += 1;
     }
 
     indexes
@@ -67,8 +64,8 @@ fn parse_containership(
     for index in indexes {
         let mut container_row: Vec<char> = Vec::new();
 
-        for i in 0..extracted_containership.len() {
-            let mut line = extracted_containership[i].chars().clone();
+        for i in extracted_containership.iter() {
+            let mut line = i.chars().clone();
             if let Some(x) = line.nth(index) {
                 if !x.is_whitespace() {
                     container_row.push(x);
@@ -93,19 +90,17 @@ fn parse_digits(reader: BufReader<File>) -> Vec<Vec<usize>> {
         for c in line.chars() {
             if c.is_numeric() {
                 group.push(c);
+            } else if !group.is_empty() {
+                let n: usize = group
+                    .iter()
+                    .map(|c| c.to_string())
+                    .collect::<String>()
+                    .parse()
+                    .unwrap();
+                digits.push(n);
+                group.clear();
             } else {
-                if !group.is_empty() {
-                    let n: usize = group
-                        .iter()
-                        .map(|c| c.to_string())
-                        .collect::<String>()
-                        .parse()
-                        .unwrap();
-                    digits.push(n);
-                    group.clear();
-                } else {
-                    continue;
-                }
+                continue;
             }
         }
 
@@ -126,10 +121,10 @@ fn parse_digits(reader: BufReader<File>) -> Vec<Vec<usize>> {
 }
 
 fn cratemover_9000(
-    parsed_containership: &Vec<Vec<char>>,
+    parsed_containership: &[Vec<char>],
     parsed_digits: &Vec<Vec<usize>>,
 ) -> Vec<char> {
-    let mut parsed_containership = parsed_containership.clone();
+    let mut parsed_containership = parsed_containership.to_owned();
 
     for digits in parsed_digits {
         let move_count = digits[0];
@@ -156,10 +151,10 @@ fn cratemover_9000(
 }
 
 fn cratemover_9001(
-    parsed_containership: &Vec<Vec<char>>,
+    parsed_containership: &[Vec<char>],
     parsed_digits: &Vec<Vec<usize>>,
 ) -> Vec<char> {
-    let mut parsed_containership = parsed_containership.clone();
+    let mut parsed_containership = parsed_containership.to_owned();
 
     for digits in parsed_digits {
         let move_count = digits[0];
@@ -177,8 +172,8 @@ fn cratemover_9001(
 
         current_pick.reverse();
 
-        for i in 0..move_count {
-            parsed_containership[to].push(current_pick[i]);
+        for i in current_pick.iter().take(move_count) {
+            parsed_containership[to].push(*i);
         }
     }
 

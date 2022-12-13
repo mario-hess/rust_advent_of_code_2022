@@ -18,10 +18,10 @@ fn get_data_list(lines: &mut Lines<BufReader<File>>) -> Vec<Vec<Vec<u32>>> {
         .into_iter()
         .map(|l| {
             l.unwrap()
-                .split(",")
+                .split(',')
                 .map(str::to_owned)
                 .map(|j| {
-                    j.split("-")
+                    j.split('-')
                         .map(|k| k.parse::<u32>().unwrap())
                         .collect::<Vec<_>>()
                 })

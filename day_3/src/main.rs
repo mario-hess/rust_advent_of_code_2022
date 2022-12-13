@@ -42,7 +42,7 @@ fn main() {
     // Part two
     let lines = get_lines(path);
     let groups = get_groups(lines);
-    let chars = get_group_match(groups.clone());
+    let chars = get_group_match(groups);
     let sum = calculate_priorities(chars);
 
     println!("Sum: {}", sum);
@@ -58,8 +58,7 @@ fn get_group_match(groups: Vec<Group>) -> Vec<char> {
 
         let possible_match = first
             .iter()
-            .map(|i| second.iter().filter(move |j| i == *j))
-            .flatten()
+            .flat_map(|i| second.iter().filter(move |j| i == *j))
             .copied()
             .collect::<Vec<char>>();
 
@@ -149,16 +148,12 @@ fn sort_compartments(rucksacks: Vec<Rucksack>) -> Vec<Rucksack> {
     for rucksack in &mut rucksacks {
         let split_at = rucksack.items.len() / 2;
 
-        let mut counter = 0;
-
-        for item in &rucksack.items {
+        for (counter, item) in rucksack.items.iter().enumerate() {
             if counter < split_at {
                 rucksack.compartment_one.push(*item);
             } else {
                 rucksack.compartment_two.push(*item);
             }
-
-            counter += 1;
         }
     }
 
@@ -183,7 +178,7 @@ fn get_rucksacks(lines: Lines<BufReader<File>>) -> Vec<Rucksack> {
 
 fn get_lines(path: &str) -> Lines<BufReader<File>> {
     let file = File::open(path).expect("Unable to open file.");
-    let lines = BufReader::new(file).lines();
 
-    lines
+    BufReader::new(file).lines()    
+
 }
